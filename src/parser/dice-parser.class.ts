@@ -119,6 +119,9 @@ export class DiceParser extends BasicParser {
           root = this.parseDice(result, number);
         }
         break;
+      case TokenType.String:
+        root = this.parseString(result);
+        break;
       default: this.errorToken(result, TokenType.Number, token);
     }
     return root;
@@ -152,6 +155,14 @@ export class DiceParser extends BasicParser {
     }
 
     this.expectAndConsume(result, TokenType.ParenthesisClose);
+
+    return root;
+  }
+
+  parseString(result: ParseResult): Ast.ExpressionNode {
+    const string = this.expectAndConsume(result, TokenType.String);
+    const root = Ast.Factory.create(Ast.NodeType.String)
+        .setAttribute('value', string.value.replace(/\"/gi, ''));
 
     return root;
   }

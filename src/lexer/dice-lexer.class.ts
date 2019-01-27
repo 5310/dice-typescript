@@ -52,6 +52,17 @@ export class DiceLexer implements Lexer {
     return this.createToken(TokenType.Identifier, buffer);
   }
 
+  protected parseString(): Token {
+    let buffer = this.stream.getCurrentCharacter();
+    while (this.stream.peekNextCharacter() && this.stream.peekNextCharacter() !== '"') {
+      buffer += this.stream.getNextCharacter();
+    }
+    if (this.stream.peekNextCharacter()) {
+      buffer += this.stream.getNextCharacter();
+    }
+    return this.createToken(TokenType.String, buffer);
+  }
+
   protected parseNumber(): Token {
     let buffer = this.stream.getCurrentCharacter();
     let hasDot = false;
@@ -94,6 +105,7 @@ export class DiceLexer implements Lexer {
         case curChar === '-': return this.createToken(TokenType.Minus, curChar);
         case curChar === '%': return this.createToken(TokenType.Percent, curChar);
         case curChar === '!': return this.createToken(TokenType.Exclamation, curChar);
+        case curChar === '"': return this.parseString();
         case curChar === '.': return this.parseEllipsis();
         case curChar === '*':
           if (this.stream.peekNextCharacter() === '*') {
