@@ -12,7 +12,8 @@
     "lint:fix": "tslint -p ./tslint.json --fix",
     "tsc": "tsc --project ./tsconfig.build.json",
     "test": "npm run lint && karma start --single-run",
-    "test:watch": "karma start"
+    "test:watch": "karma start",
+    "install": "npm run clean && npm run tsc"
   },
   "repository": {
     "type": "git",
