@@ -61,7 +61,7 @@ describe('DiceLexer', () => {
       expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Terminator, 24));
     });
     it('interprets remaining operators correctly', () => {
-      const lexer = new Lexer.DiceLexer('2d10%8-2*3**1d4!>1<2<=2>=2d3!!=3+{4,5}');
+      const lexer = new Lexer.DiceLexer('2d10%8-2*3**1d4!>1<2<=2>=2d3!!=3+{4,5} "test text"');
       expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Number, 0, '2'));
       expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Identifier, 1, 'd'));
       expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Number, 2, '10'));
@@ -96,7 +96,8 @@ describe('DiceLexer', () => {
       expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Comma, 35, ','));
       expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Number, 36, '5'));
       expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.BraceClose, 37, '}'));
-      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Terminator, 38));
+      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.String, 39, '"test text"'));
+      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Terminator, 50));
     });
     it('interprets group repeater correctly', () => {
       const lexer = new Lexer.DiceLexer('{2d10,...3}');

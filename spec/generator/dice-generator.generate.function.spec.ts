@@ -3,7 +3,7 @@ import * as Generator from '../../src/generator';
 import { MockRandomProvider } from '../helpers';
 
 describe('DiceGenerator', () => {
-  describe('evaluate', () => {
+  describe('generate', () => {
     it('correctly evaluates a function(floor(5 / 2)).', () => {
       const func = Ast.Factory.create(Ast.NodeType.Function).setAttribute('name', 'floor');
 
