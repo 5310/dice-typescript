@@ -496,6 +496,11 @@ var DiceInterpreter = /** @class */ (function () {
             return 0;
         }
         var rhv = this.evaluate(expression.getChild(1), errors);
+        if (expression.getChild(0).type === Ast.NodeType.Number || expression.getChild(0).type === Ast.NodeType.Negate) {
+            var res = compare(this.evaluate(expression.getChild(0), errors), rhv) ? 1 : 0;
+            expression.setAttribute('success', res);
+            return res ? 1 : 0;
+        }
         var total = 0;
         var diceOrGroup = this.findDiceOrGroupNode(expression, errors);
         if (!diceOrGroup) {
