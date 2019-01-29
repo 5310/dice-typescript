@@ -28,5 +28,42 @@ describe('DiceInterpreter', () => {
       expect(dice.getChild(3).getAttribute('success')).toBe(true);
       expect(dice.getChild(4).getAttribute('success')).toBe(true);
     });
+
+    it('evaluates relational operations with numbers (20>10).', () => {
+      const exp = Ast.Factory.create(Ast.NodeType.Greater);
+
+      const numberLeft = Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 20);
+      const numberRight = Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 10);
+
+      exp.addChild(numberLeft);
+      exp.addChild(numberRight);
+
+      const interpreter = new Interpreter.DiceInterpreter();
+      const errors: Interpreter.InterpreterError[] = [];
+      const res = interpreter.evaluate(exp, errors);
+
+      expect(exp.getChildCount()).toBe(2);
+      expect(exp.getAttribute('success')).toBe(1);
+      expect(res).toBe(1);
+    });
+
+    it('evaluates relational operations with negative numbers (20>-10).', () => {
+      const exp = Ast.Factory.create(Ast.NodeType.Greater);
+
+      const numberLeft = Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 20);
+      const numberRight = Ast.Factory.create(Ast.NodeType.Negate);
+      numberRight.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 10));
+
+      exp.addChild(numberLeft);
+      exp.addChild(numberRight);
+
+      const interpreter = new Interpreter.DiceInterpreter();
+      const errors: Interpreter.InterpreterError[] = [];
+      const res = interpreter.evaluate(exp, errors);
+
+      expect(exp.getChildCount()).toBe(2);
+      expect(exp.getAttribute('success')).toBe(1);
+      expect(res).toBe(1);
+    });
   });
 });
