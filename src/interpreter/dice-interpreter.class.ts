@@ -448,9 +448,17 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
     if (!this.expectChildCount(expression, 2, errors)) { return 0; }
     const rhv = this.evaluate(expression.getChild(1), errors);
 
+    if (expression.getChild(0).type === Ast.NodeType.Number || expression.getChild(0).type === Ast.NodeType.Negate) {
+      const res = compare(this.evaluate(expression.getChild(0), errors), rhv) ? 1 : 0;
+      expression.setAttribute('success', res);
+      return res ? 1 : 0;
+    }
+
     let total = 0;
     const diceOrGroup = this.findDiceOrGroupNode(expression, errors);
-    if (!diceOrGroup) { return 0; }
+    if (!diceOrGroup) {
+      return 0;
+    }
     diceOrGroup.forEachChild(die => {
       if (!die.getAttribute('drop')) {
         const val = this.evaluate(die, errors);
