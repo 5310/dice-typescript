@@ -204,6 +204,7 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
     const penetrate = expression.getAttribute('penetrate');
 
     const sides = dice.getAttribute('sides');
+    const { maxExplode = 1000 } = this.options;
 
     let condition: Ast.ExpressionNode;
     if (expression.getChildCount() > 1) {
@@ -218,25 +219,26 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
 
     this.evaluate(dice, errors);
 
+    const newRolls: Ast.ExpressionNode[] = [];
     let total = 0;
 
-    dice.forEachChild((die, index) => {
+    dice.forEachChild(die => {
       if (!die.getAttribute('drop')) {
         let dieValue = this.evaluate(die, errors);
         total += dieValue;
-        let loopCount = 0;
-        while (condition && this.evaluateComparison(dieValue, condition, errors)) {
-          loopCount++;
-          die.setAttribute('explode', true);
+        let rollCount = 1;
+        while (condition && this.evaluateComparison(dieValue, condition, errors) && rollCount < maxExplode) {
           die = this.createDiceRoll(sides, errors);
           dieValue = this.evaluate(die, errors);
           if (penetrate) { dieValue -= 1; }
           total += dieValue;
-          dice.insertChild(die, index + loopCount);
+          newRolls.push(die);
+          rollCount += 1;
         }
       }
     });
 
+    newRolls.forEach(newRoll => dice.addChild(newRoll));
     return total;
   }
 

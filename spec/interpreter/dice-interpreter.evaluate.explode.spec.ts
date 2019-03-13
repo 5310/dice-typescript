@@ -215,5 +215,57 @@ describe('DiceInterpreter', () => {
       interpreter.evaluate(exp, errors);
       expect(errors.length).toBeGreaterThanOrEqual(1);
     });
+    it('explode at most 1000 times (1d20!=1, but always returns 1).', () => {
+      const exp = Ast.Factory.create(Ast.NodeType.Explode)
+          .setAttribute('compound', false)
+          .setAttribute('penetrate', false);
+
+      const dice = Ast.Factory.create(Ast.NodeType.Dice);
+      dice.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 1));
+      dice.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 20));
+
+      const Equal = Ast.Factory.create(Ast.NodeType.Equal);
+      Equal.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 1));
+
+      exp.addChild(dice);
+      exp.addChild(Equal);
+
+      const mockList = new MockListRandomProvider();
+      for (let i = 0 ; i < 1010; i += 1) {
+        mockList.numbers.push(1);
+      }
+
+      const interpreter = new Interpreter.DiceInterpreter(null, mockList);
+      const errors: Interpreter.InterpreterError[] = [];
+      expect(interpreter.evaluate(exp, errors)).toBe(1000);
+
+      expect(dice.getChildCount()).toBe(1000);
+    });
+    it('allow specifying the maximum number of explodes (1d20!=1, but always returns 1).', () => {
+      const exp = Ast.Factory.create(Ast.NodeType.Explode)
+          .setAttribute('compound', false)
+          .setAttribute('penetrate', false);
+
+      const dice = Ast.Factory.create(Ast.NodeType.Dice);
+      dice.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 1));
+      dice.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 20));
+
+      const Equal = Ast.Factory.create(Ast.NodeType.Equal);
+      Equal.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 1));
+
+      exp.addChild(dice);
+      exp.addChild(Equal);
+
+      const mockList = new MockListRandomProvider();
+      for (let i = 0 ; i < 1010; i += 1) {
+        mockList.numbers.push(1);
+      }
+
+      const interpreter = new Interpreter.DiceInterpreter(null, mockList, null, {maxExplode: 10});
+      const errors: Interpreter.InterpreterError[] = [];
+      expect(interpreter.evaluate(exp, errors)).toBe(10);
+
+      expect(dice.getChildCount()).toBe(10);
+    });
   });
 });
