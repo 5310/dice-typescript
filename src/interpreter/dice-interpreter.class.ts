@@ -218,6 +218,7 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
 
     this.evaluate(dice, errors);
 
+    const { maxExplode = 1000 } = this.options;
     let total = 0;
 
     dice.forEachChild((die, index) => {
@@ -225,7 +226,7 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
         let dieValue = this.evaluate(die, errors);
         total += dieValue;
         let loopCount = 0;
-        while (condition && this.evaluateComparison(dieValue, condition, errors)) {
+        while (condition && this.evaluateComparison(dieValue, condition, errors) && loopCount < maxExplode - 1) {
           loopCount++;
           die.setAttribute('explode', true);
           die = this.createDiceRoll(sides, errors);
