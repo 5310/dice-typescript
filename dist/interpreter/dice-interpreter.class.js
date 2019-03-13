@@ -257,13 +257,14 @@ var DiceInterpreter = /** @class */ (function () {
             condition.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', sides));
         }
         this.evaluate(dice, errors);
+        var _a = this.options.maxExplode, maxExplode = _a === void 0 ? 1000 : _a;
         var total = 0;
         dice.forEachChild(function (die, index) {
             if (!die.getAttribute('drop')) {
                 var dieValue = _this.evaluate(die, errors);
                 total += dieValue;
                 var loopCount = 0;
-                while (condition && _this.evaluateComparison(dieValue, condition, errors)) {
+                while (condition && _this.evaluateComparison(dieValue, condition, errors) && loopCount < maxExplode - 1) {
                     loopCount++;
                     die.setAttribute('explode', true);
                     die = _this.createDiceRoll(sides, errors);

@@ -1,6 +1,7 @@
 export interface Options {
     maxRollTimes?: number;
     maxDiceSides?: number;
+    maxExplode?: number;
     renderExpressionDecorators?: boolean;
     decorators?: {
         reroll?: string | string[];
