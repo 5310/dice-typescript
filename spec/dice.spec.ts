@@ -45,6 +45,11 @@ describe('Dice', () => {
       const dice = new Dice(null, mock);
       const exp = dice.roll('2d10!r');
       expect(exp.total).toBe(16);
+    it('correctly handles dice expressions with an upper case D (4D6)', () => {
+      const mock = new MockListRandomProvider([2, 3, 4, 5]);
+      const dice = new Dice(null, mock);
+      const exp = dice.roll('4D6');
+      expect(exp.total).toBe(14);
     });
   });
 });
