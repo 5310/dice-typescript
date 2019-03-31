@@ -17,6 +17,7 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
   protected functions: FunctionDefinitionList;
   protected random: RandomProvider;
   protected generator: DiceGenerator;
+  protected memory: Map<string, any>;
   protected options: Options;
 
   constructor(functions?: FunctionDefinitionList, random?: RandomProvider, generator?: DiceGenerator, options: Options = {}) {
@@ -24,7 +25,16 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
     (<any>Object).assign(this.functions, functions);
     this.random = random || new DefaultRandomProvider();
     this.generator = generator || new DiceGenerator(options);
+    this.memory = new Map<string, any>();
     this.options = options;
+  }
+
+  setMemory(key: string, value: any) {
+    this.memory.set(key, value);
+  }
+
+  getMemory(key): any {
+    return this.memory.get(key);
   }
 
   interpret(expression: Ast.ExpressionNode): DiceResult {

@@ -35,6 +35,10 @@ module.exports = function (config) {
       coverageOptions: {
         instrumentation: true
       },
+      compilerOptions: {
+        target: "es5",
+        lib: ["es2016", "dom"]
+      },
       reports: {
         lcovonly: {
           directory: "coverage",
