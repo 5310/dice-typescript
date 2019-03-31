@@ -57,6 +57,7 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
         case Ast.NodeType.Exponent: value = this.evaluateExponent(expression, errors); break;
         case Ast.NodeType.Dice: value = this.evaluateDice(expression, errors); break;
         case Ast.NodeType.Function: value = this.evaluateFunction(expression, errors); break;
+        case Ast.NodeType.String: value = this.evaluateString(expression, errors); break;
         case Ast.NodeType.Group: value = this.evaluateGroup(expression, errors); break;
         case Ast.NodeType.Repeat: value = this.evaluateRepeat(expression, errors); break;
         case Ast.NodeType.Explode: value = this.evaluateExplode(expression, errors); break;
@@ -165,6 +166,10 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
     }
     const result = this.functions[fName](this, expression, errors);
     return result;
+  }
+
+  evaluateString(expression: Ast.ExpressionNode, errors: InterpreterError[]): number {
+    return expression.getAttribute('value');
   }
 
   evaluateGroup(expression: Ast.ExpressionNode, errors: InterpreterError[]): number {
