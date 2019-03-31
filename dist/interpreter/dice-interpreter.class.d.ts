@@ -10,8 +10,11 @@ export declare class DiceInterpreter implements Interpreter<DiceResult> {
     protected functions: FunctionDefinitionList;
     protected random: RandomProvider;
     protected generator: DiceGenerator;
+    protected memory: Map<string, any>;
     protected options: Options;
     constructor(functions?: FunctionDefinitionList, random?: RandomProvider, generator?: DiceGenerator, options?: Options);
+    setMemory(key: string, value: any): void;
+    getMemory(key: any): any;
     interpret(expression: Ast.ExpressionNode): DiceResult;
     evaluate(expression: Ast.ExpressionNode, errors: InterpreterError[]): any;
     evaluateAdd(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;

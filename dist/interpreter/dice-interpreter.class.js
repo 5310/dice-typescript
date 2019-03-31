@@ -13,8 +13,15 @@ var DiceInterpreter = /** @class */ (function () {
         Object.assign(this.functions, functions);
         this.random = random || new random_1.DefaultRandomProvider();
         this.generator = generator || new generator_1.DiceGenerator(options);
+        this.memory = new Map();
         this.options = options;
     }
+    DiceInterpreter.prototype.setMemory = function (key, value) {
+        this.memory.set(key, value);
+    };
+    DiceInterpreter.prototype.getMemory = function (key) {
+        return this.memory.get(key);
+    };
     DiceInterpreter.prototype.interpret = function (expression) {
         var exp = expression.copy();
         var errors = [];
