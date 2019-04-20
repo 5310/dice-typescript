@@ -97,6 +97,7 @@ var DiceLexer = /** @class */ (function () {
                 case curChar === '%': return this.createToken(token_type_enum_1.TokenType.Percent, curChar);
                 case curChar === '!': return this.createToken(token_type_enum_1.TokenType.Exclamation, curChar);
                 case curChar === '"': return this.parseString();
+                case curChar === '”': return this.parseString();
                 case curChar === '.': return this.parseEllipsis();
                 case curChar === '*':
                     if (this.stream.peekNextCharacter() === '*') {
