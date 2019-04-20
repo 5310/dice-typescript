@@ -106,6 +106,7 @@ export class DiceLexer implements Lexer {
         case curChar === '%': return this.createToken(TokenType.Percent, curChar);
         case curChar === '!': return this.createToken(TokenType.Exclamation, curChar);
         case curChar === '"': return this.parseString();
+        case curChar === '”': return this.parseString();
         case curChar === '.': return this.parseEllipsis();
         case curChar === '*':
           if (this.stream.peekNextCharacter() === '*') {
