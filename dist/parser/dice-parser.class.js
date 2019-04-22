@@ -156,7 +156,7 @@ var DiceParser = /** @class */ (function (_super) {
     DiceParser.prototype.parseString = function (result) {
         var string = this.expectAndConsume(result, lexer_1.TokenType.String);
         var root = Ast.Factory.create(Ast.NodeType.String)
-            .setAttribute('value', string.value.replace(/["”]/gi, ''));
+            .setAttribute('value', string.value.replace(/["”“]/gi, ''));
         return root;
     };
     DiceParser.prototype.parseNumber = function (result) {

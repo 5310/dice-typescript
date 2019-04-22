@@ -46,7 +46,10 @@ var DiceLexer = /** @class */ (function () {
     };
     DiceLexer.prototype.parseString = function () {
         var buffer = this.stream.getCurrentCharacter();
-        while (this.stream.peekNextCharacter() && this.stream.peekNextCharacter() !== '"') {
+        while (this.stream.peekNextCharacter()
+            && this.stream.peekNextCharacter() !== '"'
+            && this.stream.peekNextCharacter() !== '”'
+            && this.stream.peekNextCharacter() !== '“') {
             buffer += this.stream.getNextCharacter();
         }
         if (this.stream.peekNextCharacter()) {
@@ -98,6 +101,7 @@ var DiceLexer = /** @class */ (function () {
                 case curChar === '!': return this.createToken(token_type_enum_1.TokenType.Exclamation, curChar);
                 case curChar === '"': return this.parseString();
                 case curChar === '”': return this.parseString();
+                case curChar === '“': return this.parseString();
                 case curChar === '.': return this.parseEllipsis();
                 case curChar === '*':
                     if (this.stream.peekNextCharacter() === '*') {
