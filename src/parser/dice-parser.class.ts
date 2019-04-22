@@ -162,7 +162,7 @@ export class DiceParser extends BasicParser {
   parseString(result: ParseResult): Ast.ExpressionNode {
     const string = this.expectAndConsume(result, TokenType.String);
     const root = Ast.Factory.create(Ast.NodeType.String)
-        .setAttribute('value', string.value.replace(/["”]/gi, ''));
+        .setAttribute('value', string.value.replace(/["”“]/gi, ''));
 
     return root;
   }
