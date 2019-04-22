@@ -54,7 +54,10 @@ export class DiceLexer implements Lexer {
 
   protected parseString(): Token {
     let buffer = this.stream.getCurrentCharacter();
-    while (this.stream.peekNextCharacter() && this.stream.peekNextCharacter() !== '"') {
+    while (this.stream.peekNextCharacter()
+        && this.stream.peekNextCharacter() !== '"'
+        && this.stream.peekNextCharacter() !== '”'
+        && this.stream.peekNextCharacter() !== '“') {
       buffer += this.stream.getNextCharacter();
     }
     if (this.stream.peekNextCharacter()) {
@@ -107,6 +110,7 @@ export class DiceLexer implements Lexer {
         case curChar === '!': return this.createToken(TokenType.Exclamation, curChar);
         case curChar === '"': return this.parseString();
         case curChar === '”': return this.parseString();
+        case curChar === '“': return this.parseString();
         case curChar === '.': return this.parseEllipsis();
         case curChar === '*':
           if (this.stream.peekNextCharacter() === '*') {
