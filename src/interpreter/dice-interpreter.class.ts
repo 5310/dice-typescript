@@ -85,6 +85,8 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
           errors.push(new InterpreterError(`Unrecognized node type '${expression.type}'.`, expression));
           return 0;
       }
+      console.log('expression', expression);
+      console.log('value', value);
       expression.setAttribute('value', value);
     }
     return expression.getAttribute('value');
@@ -261,17 +263,31 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
 
     const rolls = this.getSortedDiceRolls(dice, (type === 'lowest') ? 'ascending' : 'descending', errors).rolls;
 
-    let count = 0;
     let total = 0;
-    rolls.forEach(roll => {
-      if (count < countTotal) {
-        roll.setAttribute('drop', false);
-        total += roll.getAttribute('value');
-      } else {
-        roll.setAttribute('drop', true);
-      }
-      count++;
-    });
+    if (type === 'middle') {
+      const middleIndex = Math.floor(rolls.length / 2);
+      const lowEnd = middleIndex - (countTotal - 1);
+      const highEnd = middleIndex + (countTotal - 1);
+      rolls.forEach((roll, index) => {
+        if (index >= lowEnd && index <= highEnd) {
+          roll.setAttribute('drop', false);
+          total += roll.getAttribute('value');
+        } else {
+          roll.setAttribute('drop', true);
+        }
+      });
+    } else {
+      let count = 0;
+      rolls.forEach(roll => {
+        if (count < countTotal) {
+          roll.setAttribute('drop', false);
+          total += roll.getAttribute('value');
+        } else {
+          roll.setAttribute('drop', true);
+        }
+        count++;
+      });
+    }
     return total;
   }
 
@@ -284,17 +300,33 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
     this.evaluate(dice, errors);
 
     const rolls = this.getSortedDiceRolls(dice, (type === 'lowest') ? 'ascending' : 'descending', errors).rolls;
-    let count = 0;
+
     let total = 0;
-    rolls.forEach(roll => {
-      if (count < countTotal) {
-        roll.setAttribute('drop', true);
-      } else {
-        roll.setAttribute('drop', false);
-        total += roll.getAttribute('value');
-      }
-      count++;
-    });
+    if (type === 'middle') {
+      const middleIndex = Math.floor(rolls.length / 2);
+      const lowEnd = middleIndex - (countTotal - 1);
+      const highEnd = middleIndex + (countTotal - 1);
+      rolls.forEach((roll, index) => {
+        if (index >= lowEnd && index <= highEnd) {
+          roll.setAttribute('drop', true);
+        } else {
+          roll.setAttribute('drop', false);
+          total += roll.getAttribute('value');
+        }
+      });
+    } else {
+      let count = 0;
+      rolls.forEach(roll => {
+        if (count < countTotal) {
+          roll.setAttribute('drop', true);
+        } else {
+          roll.setAttribute('drop', false);
+          total += roll.getAttribute('value');
+        }
+        count++;
+      });
+    }
+
     return total;
   }
 

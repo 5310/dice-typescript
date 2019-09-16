@@ -28,6 +28,17 @@ describe('DiceParser', () => {
       expect(mod.type).toBe(NodeType.Drop);
       expect(mod.getAttribute('type')).toBe('highest');
     });
+    it('can correctly parse a drop modifier (dm).', () => {
+      const lexer = new MockLexer([
+        new Token(TokenType.Identifier, 0, 'dm')
+      ]);
+      const parser = new Parser.DiceParser(lexer);
+      const result = new ParseResult();
+      const mod = parser.parseDrop(result);
+      expect(result.errors.length).toBe(0);
+      expect(mod.type).toBe(NodeType.Drop);
+      expect(mod.getAttribute('type')).toBe('middle');
+    });
     it('can correctly parse a drop modifier (dl).', () => {
       const lexer = new MockLexer([
         new Token(TokenType.Identifier, 0, 'dl')

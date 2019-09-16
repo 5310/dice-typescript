@@ -305,7 +305,8 @@ export class DiceParser extends BasicParser {
         case 'k': root.setAttribute('type', 'highest'); break;
         case 'kh': root.setAttribute('type', 'highest'); break;
         case 'kl': root.setAttribute('type', 'lowest'); break;
-        default: this.errorMessage(result, `Unknown keep type ${token.value}. Must be (k|kh|kl).`, token);
+        case 'km': root.setAttribute('type', 'middle'); break;
+        default: this.errorMessage(result, `Unknown keep type ${token.value}. Must be (k|kh|kl|km).`, token);
       }
     }
 
@@ -331,7 +332,8 @@ export class DiceParser extends BasicParser {
         case 'd': root.setAttribute('type', 'lowest'); break;
         case 'dh': root.setAttribute('type', 'highest'); break;
         case 'dl': root.setAttribute('type', 'lowest'); break;
-        default: this.errorMessage(result, `Unknown drop type ${token.value}. Must be (d|dh|dl).`, token);
+        case 'dm': root.setAttribute('type', 'middle'); break;
+        default: this.errorMessage(result, `Unknown drop type ${token.value}. Must be (d|dh|dl|dm).`, token);
       }
     }
 
