@@ -7,6 +7,7 @@ var DiceGenerator = /** @class */ (function () {
         this.options = options;
     }
     DiceGenerator.prototype.generate = function (expression) {
+        // console.log(expression);
         switch (expression.type) {
             case Ast.NodeType.Number: return this.generateNumber(expression);
             case Ast.NodeType.Add: return this.generateAdd(expression);
@@ -153,6 +154,9 @@ var DiceGenerator = /** @class */ (function () {
         if (expression.getAttribute('type') === 'lowest') {
             exp += 'l';
         }
+        if (expression.getAttribute('type') === 'middle') {
+            exp += 'm';
+        }
         if (expression.getChildCount() > 1) {
             exp += this.generate(expression.getChild(1));
         }
@@ -166,6 +170,9 @@ var DiceGenerator = /** @class */ (function () {
         }
         if (expression.getAttribute('type') === 'lowest') {
             exp += 'l';
+        }
+        if (expression.getAttribute('type') === 'middle') {
+            exp += 'm';
         }
         if (expression.getChildCount() > 1) {
             exp += this.generate(expression.getChild(1));

@@ -121,6 +121,8 @@ var DiceInterpreter = /** @class */ (function () {
                     errors.push(new error_message_class_1.InterpreterError("Unrecognized node type '" + expression.type + "'.", expression));
                     return 0;
             }
+            console.log('expression', expression);
+            console.log('value', value);
             expression.setAttribute('value', value);
         }
         return expression.getAttribute('value');
@@ -298,18 +300,34 @@ var DiceInterpreter = /** @class */ (function () {
         var type = expression.getAttribute('type');
         this.evaluate(dice, errors);
         var rolls = this.getSortedDiceRolls(dice, (type === 'lowest') ? 'ascending' : 'descending', errors).rolls;
-        var count = 0;
         var total = 0;
-        rolls.forEach(function (roll) {
-            if (count < countTotal) {
-                roll.setAttribute('drop', false);
-                total += roll.getAttribute('value');
-            }
-            else {
-                roll.setAttribute('drop', true);
-            }
-            count++;
-        });
+        if (type === 'middle') {
+            var middleIndex = Math.floor(rolls.length / 2);
+            var lowEnd_1 = middleIndex - (countTotal - 1);
+            var highEnd_1 = middleIndex + (countTotal - 1);
+            rolls.forEach(function (roll, index) {
+                if (index >= lowEnd_1 && index <= highEnd_1) {
+                    roll.setAttribute('drop', false);
+                    total += roll.getAttribute('value');
+                }
+                else {
+                    roll.setAttribute('drop', true);
+                }
+            });
+        }
+        else {
+            var count_1 = 0;
+            rolls.forEach(function (roll) {
+                if (count_1 < countTotal) {
+                    roll.setAttribute('drop', false);
+                    total += roll.getAttribute('value');
+                }
+                else {
+                    roll.setAttribute('drop', true);
+                }
+                count_1++;
+            });
+        }
         return total;
     };
     DiceInterpreter.prototype.evaluateDrop = function (expression, errors) {
@@ -324,18 +342,34 @@ var DiceInterpreter = /** @class */ (function () {
         var type = expression.getAttribute('type');
         this.evaluate(dice, errors);
         var rolls = this.getSortedDiceRolls(dice, (type === 'lowest') ? 'ascending' : 'descending', errors).rolls;
-        var count = 0;
         var total = 0;
-        rolls.forEach(function (roll) {
-            if (count < countTotal) {
-                roll.setAttribute('drop', true);
-            }
-            else {
-                roll.setAttribute('drop', false);
-                total += roll.getAttribute('value');
-            }
-            count++;
-        });
+        if (type === 'middle') {
+            var middleIndex = Math.floor(rolls.length / 2);
+            var lowEnd_2 = middleIndex - (countTotal - 1);
+            var highEnd_2 = middleIndex + (countTotal - 1);
+            rolls.forEach(function (roll, index) {
+                if (index >= lowEnd_2 && index <= highEnd_2) {
+                    roll.setAttribute('drop', true);
+                }
+                else {
+                    roll.setAttribute('drop', false);
+                    total += roll.getAttribute('value');
+                }
+            });
+        }
+        else {
+            var count_2 = 0;
+            rolls.forEach(function (roll) {
+                if (count_2 < countTotal) {
+                    roll.setAttribute('drop', true);
+                }
+                else {
+                    roll.setAttribute('drop', false);
+                    total += roll.getAttribute('value');
+                }
+                count_2++;
+            });
+        }
         return total;
     };
     DiceInterpreter.prototype.evaluateCritical = function (expression, errors) {

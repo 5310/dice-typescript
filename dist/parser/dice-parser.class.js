@@ -295,7 +295,10 @@ var DiceParser = /** @class */ (function (_super) {
                 case 'kl':
                     root.setAttribute('type', 'lowest');
                     break;
-                default: this.errorMessage(result, "Unknown keep type " + token.value + ". Must be (k|kh|kl).", token);
+                case 'km':
+                    root.setAttribute('type', 'middle');
+                    break;
+                default: this.errorMessage(result, "Unknown keep type " + token.value + ". Must be (k|kh|kl|km).", token);
             }
         }
         this.lexer.getNextToken(); // Consume.
@@ -326,7 +329,10 @@ var DiceParser = /** @class */ (function (_super) {
                 case 'dl':
                     root.setAttribute('type', 'lowest');
                     break;
-                default: this.errorMessage(result, "Unknown drop type " + token.value + ". Must be (d|dh|dl).", token);
+                case 'dm':
+                    root.setAttribute('type', 'middle');
+                    break;
+                default: this.errorMessage(result, "Unknown drop type " + token.value + ". Must be (d|dh|dl|dm).", token);
             }
         }
         this.lexer.getNextToken(); // Consume.
