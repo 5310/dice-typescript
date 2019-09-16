@@ -8,7 +8,6 @@ export class DiceGenerator implements Generator<string> {
   ) { }
 
   generate(expression: Ast.ExpressionNode): string {
-    // console.log(expression);
     switch (expression.type) {
       case Ast.NodeType.Number: return this.generateNumber(expression);
       case Ast.NodeType.Add: return this.generateAdd(expression);
