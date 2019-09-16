@@ -8,6 +8,7 @@ export class DiceGenerator implements Generator<string> {
   ) { }
 
   generate(expression: Ast.ExpressionNode): string {
+    // console.log(expression);
     switch (expression.type) {
       case Ast.NodeType.Number: return this.generateNumber(expression);
       case Ast.NodeType.Add: return this.generateAdd(expression);
@@ -155,6 +156,7 @@ export class DiceGenerator implements Generator<string> {
     let exp = 'k';
     if (expression.getAttribute('type') === 'highest') { exp += 'h'; }
     if (expression.getAttribute('type') === 'lowest') { exp += 'l'; }
+    if (expression.getAttribute('type') === 'middle') { exp += 'm'; }
 
     if (expression.getChildCount() > 1) { exp += this.generate(expression.getChild(1)); }
     return this.generate(expression.getChild(0)) + exp;
@@ -165,6 +167,7 @@ export class DiceGenerator implements Generator<string> {
     let exp = 'd';
     if (expression.getAttribute('type') === 'highest') { exp += 'h'; }
     if (expression.getAttribute('type') === 'lowest') { exp += 'l'; }
+    if (expression.getAttribute('type') === 'middle') { exp += 'm'; }
 
     if (expression.getChildCount() > 1) { exp += this.generate(expression.getChild(1)); }
     return this.generate(expression.getChild(0)) + exp;

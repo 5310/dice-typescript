@@ -39,6 +39,17 @@ describe('DiceParser', () => {
       expect(mod.type).toBe(NodeType.Keep);
       expect(mod.getAttribute('type')).toBe('lowest');
     });
+    it('can correctly parse a keep modifier (km).', () => {
+      const lexer = new MockLexer([
+        new Token(TokenType.Identifier, 0, 'km')
+      ]);
+      const parser = new Parser.DiceParser(lexer);
+      const result = new ParseResult();
+      const mod = parser.parseKeep(result);
+      expect(result.errors.length).toBe(0);
+      expect(mod.type).toBe(NodeType.Keep);
+      expect(mod.getAttribute('type')).toBe('middle');
+    });
     it('can correctly parse a keep modifier with simple number (kl3).', () => {
       const lexer = new MockLexer([
         new Token(TokenType.Identifier, 0, 'kl'),

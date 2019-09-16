@@ -29,6 +29,19 @@ describe('DiceGenerator', () => {
       const generator = new Generator.DiceGenerator();
       expect(generator.generate(exp)).toBe('2d6dh');
     });
+    it('generates a simple drop (3d6dm).', () => {
+      const exp = Ast.Factory.create(Ast.NodeType.Drop)
+          .setAttribute('type', 'middle');
+
+      const dice = Ast.Factory.create(Ast.NodeType.Dice);
+      dice.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 3));
+      dice.addChild(Ast.Factory.create(Ast.NodeType.DiceSides).setAttribute('value', 6));
+
+      exp.addChild(dice);
+
+      const generator = new Generator.DiceGenerator();
+      expect(generator.generate(exp)).toBe('3d6dm');
+    });
     it('generates a drop with modifier (3d6dh2).', () => {
       const exp = Ast.Factory.create(Ast.NodeType.Drop)
         .setAttribute('type', 'highest');
