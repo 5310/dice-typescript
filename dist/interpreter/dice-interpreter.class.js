@@ -121,8 +121,6 @@ var DiceInterpreter = /** @class */ (function () {
                     errors.push(new error_message_class_1.InterpreterError("Unrecognized node type '" + expression.type + "'.", expression));
                     return 0;
             }
-            console.log('expression', expression);
-            console.log('value', value);
             expression.setAttribute('value', value);
         }
         return expression.getAttribute('value');
