@@ -35,6 +35,7 @@ export class DiceGenerator implements Generator<string> {
       case Ast.NodeType.Critical: return this.generateCritical(expression);
       case Ast.NodeType.Reroll: return this.generateReroll(expression);
       case Ast.NodeType.Sort: return this.generateSort(expression);
+      case Ast.NodeType.SubtractFailure: return this.generateSubtractFailure(expression);
       default: throw new Error('Unrecognized node type.');
     }
   }
@@ -100,6 +101,7 @@ export class DiceGenerator implements Generator<string> {
       if (expression.getAttribute('drop')) { exp = this.applyDecorator(exp, 'drop', '↓'); }
       if (expression.getAttribute('critical')) { exp = this.applyDecorator(exp, 'critical', '*'); }
       if (expression.getAttribute('success')) { exp = this.applyDecorator(exp, 'success', '✓'); }
+      if (expression.getAttribute('failure')) { exp = this.applyDecorator(exp, 'failure', '✗'); }
     }
     return exp;
   }
@@ -195,6 +197,13 @@ export class DiceGenerator implements Generator<string> {
     if (expression.getAttribute('direction') === 'ascending') { sort += 'a'; }
     if (expression.getAttribute('direction') === 'descending') { sort += 'd'; }
     return this.generate(expression.getChild(0)) + sort;
+  }
+
+  generateSubtractFailure(expression: Ast.ExpressionNode): string {
+    this.expectChildCount(expression, 1);
+    let subtractFailure = 'f';
+    if (expression.getChildCount() > 1) { subtractFailure += this.generate(expression.getChild(1)); }
+    return this.generate(expression.getChild(0)) + subtractFailure;
   }
 
   private generateEqualityExpression(expression: Ast.ExpressionNode, operator: string): string {

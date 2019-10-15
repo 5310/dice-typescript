@@ -356,7 +356,7 @@ export class DiceParser extends BasicParser {
       switch (token.value) {
         case 'r': root.setAttribute('once', false); break;
         case 'ro': root.setAttribute('once', true); break;
-        default: this.errorMessage(result, `Unknown drop type ${token.value}. Must be (r|ro).`, token);
+        default: this.errorMessage(result, `Unknown reroll type ${token.value}. Must be (r|ro).`, token);
       }
     }
     this.lexer.getNextToken(); // Consume.
@@ -384,6 +384,30 @@ export class DiceParser extends BasicParser {
     }
     this.lexer.getNextToken(); // Consume.
 
+    return root;
+  }
+
+  parseSubtractFailure(result: ParseResult, lhs?: Ast.ExpressionNode): Ast.ExpressionNode {
+    const root = Ast.Factory.create(Ast.NodeType.SubtractFailure);
+    if (lhs) { root.addChild(lhs); }
+
+    const token = this.lexer.peekNextToken();
+    if (token.type === TokenType.Identifier) {
+      switch (token.value) {
+        case 'f': root.setAttribute('subtractFailure', true); break;
+        default: this.errorMessage(result, `Unknown subtractFailure type ${token.value}. Must be f.`, token);
+      }
+    }
+    this.lexer.getNextToken(); // Consume.
+
+    const tokenType = this.lexer.peekNextToken().type;
+    if (tokenType === TokenType.Number) {
+      const equal = Ast.Factory.create(Ast.NodeType.Equal);
+      equal.addChild(this.parseSimpleFactor(result));
+      root.addChild(equal);
+    } else if (Object.keys(BooleanOperatorMap).indexOf(tokenType.toString()) > -1) {
+      root.addChild(this.parseCompareModifier(result));
+    }
     return root;
   }
 
@@ -415,6 +439,7 @@ export class DiceParser extends BasicParser {
           case 'k': root = this.parseKeep(result, root); break;
           case 'r': root = this.parseReroll(result, root); break;
           case 's': root = this.parseSort(result, root); break;
+          case 'f': root = this.parseSubtractFailure(result, root); break;
           default:
             this.errorToken(result, TokenType.Identifier, token);
             return root;
