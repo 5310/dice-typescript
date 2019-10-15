@@ -41,8 +41,9 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
     const exp = expression.copy();
     const errors: InterpreterError[] = [];
     const total = this.evaluate(exp, errors);
-    const successes = this.countSuccesses(exp, errors);
-    const fails = this.countFailures(exp, errors);
+    const subtractFailures = !!expression.getAttribute('subtractFailure');
+    const fails = this.countFailures(exp, subtractFailures, errors);
+    const successes = this.countSuccesses(exp, subtractFailures, fails, errors);
     const renderedExpression = this.generator.generate(exp);
     return new DiceResult(exp, renderedExpression, total, successes, fails, errors);
   }
@@ -76,6 +77,7 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
         case Ast.NodeType.Critical: value = this.evaluateCritical(expression, errors); break;
         case Ast.NodeType.Reroll: value = this.evaluateReroll(expression, errors); break;
         case Ast.NodeType.Sort: value = this.evaluateSort(expression, errors); break;
+        case Ast.NodeType.SubtractFailure: value = this.evaluateSubtractFailure(expression, errors); break;
         case Ast.NodeType.Equal: value = this.evaluateEqual(expression, errors); break;
         case Ast.NodeType.Greater: value = this.evaluateGreater(expression, errors); break;
         case Ast.NodeType.GreaterOrEqual: value = this.evaluateGreaterOrEqual(expression, errors); break;
@@ -418,6 +420,42 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
     return rolls.total;
   }
 
+  evaluateSubtractFailure(expression: Ast.ExpressionNode, errors: InterpreterError[]): number {
+    if (!this.expectChildCount(expression, 1, errors)) { return 0; }
+    const dice = this.findDiceOrGroupNode(expression, errors);
+    if (!dice) { return 0; }
+    let condition: Ast.ExpressionNode;
+
+    if (expression.getChildCount() > 1) {
+      condition = expression.getChild(1);
+      if (condition.type === Ast.NodeType.Number) {
+        const value = condition.getAttribute('value');
+        condition = Ast.Factory.create(Ast.NodeType.Equal);
+        condition.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', value));
+      }
+    } else {
+      condition = Ast.Factory.create(Ast.NodeType.Equal);
+      condition.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 1));
+    }
+
+    this.evaluate(dice, errors);
+
+    let total = 0;
+    dice.forEachChild((die) => {
+      if (!die.getAttribute('drop')) {
+        const dieValue = this.evaluate(die, errors);
+        if (this.evaluateComparison(dieValue, condition, errors)) {
+          die.setAttribute('failure', true);
+        } else {
+          die.setAttribute('failure', false);
+        }
+        total += dieValue;
+      }
+    });
+
+    return total;
+  }
+
   evaluateEqual(expression: Ast.ExpressionNode, errors: InterpreterError[]): number {
     return this.evaluateSuccess(expression, (l, r) => (l === r), errors);
   }
@@ -438,12 +476,16 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
     return this.evaluateSuccess(expression, (l, r) => (l <= r), errors);
   }
 
-  countSuccesses(expression: Ast.ExpressionNode, errors: InterpreterError[]): number {
-    return this.countSuccessOrFailure(expression, die => die.getAttribute('success'), errors);
+  countSuccesses(expression: Ast.ExpressionNode, subtractFailures: boolean, fails: number, errors: InterpreterError[]): number {
+    const successes = this.countSuccessOrFailure(expression, die => die.getAttribute('success'), errors);
+    return subtractFailures ? successes - fails : successes;
   }
 
-  countFailures(expression: Ast.ExpressionNode, errors: InterpreterError[]): number {
-    return this.countSuccessOrFailure(expression, die => !die.getAttribute('success'), errors);
+  countFailures(expression: Ast.ExpressionNode, subtractFailures: boolean, errors: InterpreterError[]): number {
+    return this.countSuccessOrFailure(
+        expression,
+        die => subtractFailures ? die.getAttribute('failure') : !die.getAttribute('success'),
+        errors);
   }
 
   private countSuccessOrFailure(expression: Ast.ExpressionNode,

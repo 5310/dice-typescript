@@ -104,7 +104,8 @@ When viewing individual roll results, its useful to know what was considered in 
 * explode: !
 * drop: ↓
 * critical: *
-* sucess: ✓
+* success: ✓
+* failure: ✗
 
 ```typescript
 const dice = new Dice(null, null, {

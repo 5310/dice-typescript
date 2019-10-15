@@ -25,6 +25,7 @@ export enum NodeType {
   Critical = <any>'Critical',
   Reroll = <any>'Reroll',
   Sort = <any>'Sort',
+  SubtractFailure = <any>'SubtractFailure',
 
   Dice = <any>'Dice',
   DiceSides = <any>'DiceSides',
