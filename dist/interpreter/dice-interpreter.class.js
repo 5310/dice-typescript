@@ -26,8 +26,9 @@ var DiceInterpreter = /** @class */ (function () {
         var exp = expression.copy();
         var errors = [];
         var total = this.evaluate(exp, errors);
-        var successes = this.countSuccesses(exp, errors);
-        var fails = this.countFailures(exp, errors);
+        var subtractFailures = !!expression.getAttribute('subtractFailure');
+        var fails = this.countFailures(exp, subtractFailures, errors);
+        var successes = this.countSuccesses(exp, subtractFailures, fails, errors);
         var renderedExpression = this.generator.generate(exp);
         return new dice_result_class_1.DiceResult(exp, renderedExpression, total, successes, fails, errors);
     };
@@ -101,6 +102,9 @@ var DiceInterpreter = /** @class */ (function () {
                     break;
                 case Ast.NodeType.Sort:
                     value = this.evaluateSort(expression, errors);
+                    break;
+                case Ast.NodeType.SubtractFailure:
+                    value = this.evaluateSubtractFailure(expression, errors);
                     break;
                 case Ast.NodeType.Equal:
                     value = this.evaluateEqual(expression, errors);
@@ -468,6 +472,44 @@ var DiceInterpreter = /** @class */ (function () {
         rolls.rolls.forEach(function (roll) { return dice.addChild(roll); });
         return rolls.total;
     };
+    DiceInterpreter.prototype.evaluateSubtractFailure = function (expression, errors) {
+        var _this = this;
+        if (!this.expectChildCount(expression, 1, errors)) {
+            return 0;
+        }
+        var dice = this.findDiceOrGroupNode(expression, errors);
+        if (!dice) {
+            return 0;
+        }
+        var condition;
+        if (expression.getChildCount() > 1) {
+            condition = expression.getChild(1);
+            if (condition.type === Ast.NodeType.Number) {
+                var value = condition.getAttribute('value');
+                condition = Ast.Factory.create(Ast.NodeType.Equal);
+                condition.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', value));
+            }
+        }
+        else {
+            condition = Ast.Factory.create(Ast.NodeType.Equal);
+            condition.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 1));
+        }
+        this.evaluate(dice, errors);
+        var total = 0;
+        dice.forEachChild(function (die) {
+            if (!die.getAttribute('drop')) {
+                var dieValue = _this.evaluate(die, errors);
+                if (_this.evaluateComparison(dieValue, condition, errors)) {
+                    die.setAttribute('failure', true);
+                }
+                else {
+                    die.setAttribute('failure', false);
+                }
+                total += dieValue;
+            }
+        });
+        return total;
+    };
     DiceInterpreter.prototype.evaluateEqual = function (expression, errors) {
         return this.evaluateSuccess(expression, function (l, r) { return (l === r); }, errors);
     };
@@ -483,11 +525,12 @@ var DiceInterpreter = /** @class */ (function () {
     DiceInterpreter.prototype.evaluateLessOrEqual = function (expression, errors) {
         return this.evaluateSuccess(expression, function (l, r) { return (l <= r); }, errors);
     };
-    DiceInterpreter.prototype.countSuccesses = function (expression, errors) {
-        return this.countSuccessOrFailure(expression, function (die) { return die.getAttribute('success'); }, errors);
+    DiceInterpreter.prototype.countSuccesses = function (expression, subtractFailures, fails, errors) {
+        var successes = this.countSuccessOrFailure(expression, function (die) { return die.getAttribute('success'); }, errors);
+        return subtractFailures ? successes - fails : successes;
     };
-    DiceInterpreter.prototype.countFailures = function (expression, errors) {
-        return this.countSuccessOrFailure(expression, function (die) { return !die.getAttribute('success'); }, errors);
+    DiceInterpreter.prototype.countFailures = function (expression, subtractFailures, errors) {
+        return this.countSuccessOrFailure(expression, function (die) { return subtractFailures ? die.getAttribute('failure') : !die.getAttribute('success'); }, errors);
     };
     DiceInterpreter.prototype.countSuccessOrFailure = function (expression, condition, errors) {
         var _this = this;

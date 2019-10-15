@@ -34,6 +34,7 @@ var DiceGenerator = /** @class */ (function () {
             case Ast.NodeType.Critical: return this.generateCritical(expression);
             case Ast.NodeType.Reroll: return this.generateReroll(expression);
             case Ast.NodeType.Sort: return this.generateSort(expression);
+            case Ast.NodeType.SubtractFailure: return this.generateSubtractFailure(expression);
             default: throw new Error('Unrecognized node type.');
         }
     };
@@ -98,6 +99,9 @@ var DiceGenerator = /** @class */ (function () {
             }
             if (expression.getAttribute('success')) {
                 exp = this.applyDecorator(exp, 'success', '✓');
+            }
+            if (expression.getAttribute('failure')) {
+                exp = this.applyDecorator(exp, 'failure', '✗');
             }
         }
         return exp;
@@ -213,6 +217,14 @@ var DiceGenerator = /** @class */ (function () {
             sort += 'd';
         }
         return this.generate(expression.getChild(0)) + sort;
+    };
+    DiceGenerator.prototype.generateSubtractFailure = function (expression) {
+        this.expectChildCount(expression, 1);
+        var subtractFailure = 'f';
+        if (expression.getChildCount() > 1) {
+            subtractFailure += this.generate(expression.getChild(1));
+        }
+        return this.generate(expression.getChild(0)) + subtractFailure;
     };
     DiceGenerator.prototype.generateEqualityExpression = function (expression, operator) {
         this.expectChildCount(expression, 1);

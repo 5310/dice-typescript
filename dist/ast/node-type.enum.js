@@ -23,6 +23,7 @@ var NodeType;
     NodeType[NodeType["Critical"] = 'Critical'] = "Critical";
     NodeType[NodeType["Reroll"] = 'Reroll'] = "Reroll";
     NodeType[NodeType["Sort"] = 'Sort'] = "Sort";
+    NodeType[NodeType["SubtractFailure"] = 'SubtractFailure'] = "SubtractFailure";
     NodeType[NodeType["Dice"] = 'Dice'] = "Dice";
     NodeType[NodeType["DiceSides"] = 'DiceSides'] = "DiceSides";
     NodeType[NodeType["DiceRoll"] = 'DiceRoll'] = "DiceRoll";

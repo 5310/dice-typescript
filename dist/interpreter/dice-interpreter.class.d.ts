@@ -38,13 +38,14 @@ export declare class DiceInterpreter implements Interpreter<DiceResult> {
     evaluateCritical(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;
     evaluateReroll(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;
     evaluateSort(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;
+    evaluateSubtractFailure(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;
     evaluateEqual(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;
     evaluateGreater(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;
     evaluateGreaterOrEqual(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;
     evaluateLess(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;
     evaluateLessOrEqual(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;
-    countSuccesses(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;
-    countFailures(expression: Ast.ExpressionNode, errors: InterpreterError[]): number;
+    countSuccesses(expression: Ast.ExpressionNode, subtractFailures: boolean, fails: number, errors: InterpreterError[]): number;
+    countFailures(expression: Ast.ExpressionNode, subtractFailures: boolean, errors: InterpreterError[]): number;
     private countSuccessOrFailure;
     private expectChildCount;
     private evaluateComparison;

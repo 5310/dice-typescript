@@ -357,7 +357,7 @@ var DiceParser = /** @class */ (function (_super) {
                 case 'ro':
                     root.setAttribute('once', true);
                     break;
-                default: this.errorMessage(result, "Unknown drop type " + token.value + ". Must be (r|ro).", token);
+                default: this.errorMessage(result, "Unknown reroll type " + token.value + ". Must be (r|ro).", token);
             }
         }
         this.lexer.getNextToken(); // Consume.
@@ -389,6 +389,32 @@ var DiceParser = /** @class */ (function (_super) {
             }
         }
         this.lexer.getNextToken(); // Consume.
+        return root;
+    };
+    DiceParser.prototype.parseSubtractFailure = function (result, lhs) {
+        var root = Ast.Factory.create(Ast.NodeType.SubtractFailure);
+        if (lhs) {
+            root.addChild(lhs);
+        }
+        var token = this.lexer.peekNextToken();
+        if (token.type === lexer_1.TokenType.Identifier) {
+            switch (token.value) {
+                case 'f':
+                    root.setAttribute('subtractFailure', true);
+                    break;
+                default: this.errorMessage(result, "Unknown subtractFailure type " + token.value + ". Must be f.", token);
+            }
+        }
+        this.lexer.getNextToken(); // Consume.
+        var tokenType = this.lexer.peekNextToken().type;
+        if (tokenType === lexer_1.TokenType.Number) {
+            var equal = Ast.Factory.create(Ast.NodeType.Equal);
+            equal.addChild(this.parseSimpleFactor(result));
+            root.addChild(equal);
+        }
+        else if (Object.keys(BooleanOperatorMap).indexOf(tokenType.toString()) > -1) {
+            root.addChild(this.parseCompareModifier(result));
+        }
         return root;
     };
     DiceParser.prototype.parseCompareModifier = function (result, lhs) {
@@ -432,6 +458,9 @@ var DiceParser = /** @class */ (function (_super) {
                         break;
                     case 's':
                         root = this.parseSort(result, root);
+                        break;
+                    case 'f':
+                        root = this.parseSubtractFailure(result, root);
                         break;
                     default:
                         this.errorToken(result, lexer_1.TokenType.Identifier, token);

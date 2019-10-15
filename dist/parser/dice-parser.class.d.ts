@@ -24,6 +24,7 @@ export declare class DiceParser extends BasicParser {
     parseDrop(result: ParseResult, lhs?: Ast.ExpressionNode): Ast.ExpressionNode;
     parseReroll(result: ParseResult, lhs?: Ast.ExpressionNode): Ast.ExpressionNode;
     parseSort(result: ParseResult, lhs?: Ast.ExpressionNode): Ast.ExpressionNode;
+    parseSubtractFailure(result: ParseResult, lhs?: Ast.ExpressionNode): Ast.ExpressionNode;
     parseCompareModifier(result: ParseResult, lhs?: Ast.ExpressionNode): Ast.ExpressionNode;
     private parseDiceModifiers;
     private parseGroupModifiers;

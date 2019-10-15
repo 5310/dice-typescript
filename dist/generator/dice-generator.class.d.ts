@@ -31,6 +31,7 @@ export declare class DiceGenerator implements Generator<string> {
     generateCritical(expression: Ast.ExpressionNode): string;
     generateReroll(expression: Ast.ExpressionNode): string;
     generateSort(expression: Ast.ExpressionNode): string;
+    generateSubtractFailure(expression: Ast.ExpressionNode): string;
     private generateEqualityExpression;
     private generateCommaList;
     private generateWithParens;

@@ -20,6 +20,7 @@ export declare enum NodeType {
     Critical,
     Reroll,
     Sort,
+    SubtractFailure,
     Dice,
     DiceSides,
     DiceRoll,
