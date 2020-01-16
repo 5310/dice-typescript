@@ -1,16 +1,15 @@
-import * as Random from 'random-js';
-
 import { RandomProvider } from './random-provider.class';
+import { MersenneTwister19937, Engine, integer } from 'random-js';
 
 export class DefaultRandomProvider implements RandomProvider {
-
-  private random: Random;
+  private engine: Engine;
 
   constructor() {
-    this.random = new Random(Random.engines.mt19937().autoSeed());
+    this.engine = MersenneTwister19937.autoSeed();
   }
 
   numberBetween(min: number, max: number) {
-    return this.random.integer(min, max);
+    const distribution = integer(min, max);
+    return distribution(this.engine);
   }
 }
