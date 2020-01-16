@@ -64,7 +64,7 @@ describe('DiceInterpreter', () => {
       expect(res.failures).toBe(3, 'Failures counted incorrectly');
       expect(res.total).toBe(29, 'Total counted incorrectly');
       expect(res.renderedExpression).toBe(
-        '{[20, 15]kl, [14, 10]kl, [18, 14]kl, [2, 13]kl, [18, 10]kl} >= 14',
+        '{[20, 15]kl = 15; [14, 10]kl = 10; [18, 14]kl = 14; [2, 13]kl = 2; [18, 10]kl = 10} >= 14',
         'Expression rendered incorrectly.'
       );
     });

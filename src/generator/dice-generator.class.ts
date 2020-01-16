@@ -115,7 +115,7 @@ export class DiceGenerator implements Generator<string> {
   }
 
   generateGroup(expression: Ast.ExpressionNode): string {
-    return '{' + this.generateCommaList(expression) + '}';
+    return '{' + this.generateGroupCommaList(expression) + '}';
   }
 
   generateRepeat(expression: Ast.ExpressionNode): string {
@@ -220,6 +220,20 @@ export class DiceGenerator implements Generator<string> {
     for (let x = 0; x < expression.getChildCount(); x++) {
       if (x > 0) { buffer += ', '; }
       buffer += this.generate(expression.getChild(x));
+    }
+    return buffer;
+  }
+
+  private generateGroupCommaList(expression: Ast.ExpressionNode): string {
+    let buffer = '';
+    for (let x = 0; x < expression.getChildCount(); x++) {
+      if (x > 0) { buffer += '; '; }
+      buffer += this.generate(expression.getChild(x));
+
+      const groupTotal = expression.getChild(x).getAttribute('value');
+      if (groupTotal && expression.getChild(x).type !== Ast.NodeType.Number) {
+        buffer += ` = ${groupTotal}`;
+      }
     }
     return buffer;
   }

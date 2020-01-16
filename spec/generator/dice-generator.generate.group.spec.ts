@@ -12,7 +12,7 @@ describe('DiceGenerator', () => {
 
       const generator = new Generator.DiceGenerator();
 
-      expect(generator.generate(group)).toBe('{5, 2}');
+      expect(generator.generate(group)).toBe('{5; 2}');
     });
     it('correctly evaluates a group with a repeater {5...2}.', () => {
       const group = Ast.Factory.create(Ast.NodeType.Group);
@@ -40,7 +40,7 @@ describe('DiceGenerator', () => {
 
       const generator = new Generator.DiceGenerator();
 
-      expect(generator.generate(keep)).toBe('{5, 2}kh');
+      expect(generator.generate(keep)).toBe('{5; 2}kh');
     });
   });
 });
