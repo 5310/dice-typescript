@@ -68,15 +68,13 @@ export class DiceLexer implements Lexer {
 
   protected parseNumber(): Token {
     let buffer = this.stream.getCurrentCharacter();
-    let hasDot = false;
     let nextChar = this.stream.peekNextCharacter();
     while (nextChar === '.' || this.numCharRegex.test(nextChar)) {
-      if (nextChar === '.') {
-        if (hasDot) { break; }
-        hasDot = true;
-      }
       buffer += this.stream.getNextCharacter();
       nextChar = this.stream.peekNextCharacter();
+      if (nextChar === '.') {
+        break;
+      }
     }
     return this.createToken(TokenType.Number, buffer);
   }
@@ -84,7 +82,7 @@ export class DiceLexer implements Lexer {
   protected parseEllipsis(): Token {
     for (let x = 0; x < 2; x++) {
       if (this.stream.peekNextCharacter() !== '.') {
-        throw new Error('Missing period in ellipsis.');
+        throw new Error('Unexpected number of periods in ellipsis.');
       }
       this.stream.getNextCharacter();
     }
