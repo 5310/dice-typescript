@@ -69,14 +69,23 @@ export class DiceLexer implements Lexer {
   protected parseNumber(): Token {
     let buffer = this.stream.getCurrentCharacter();
     let nextChar = this.stream.peekNextCharacter();
-    while (nextChar === '.' || this.numCharRegex.test(nextChar)) {
-      buffer += this.stream.getNextCharacter();
-      nextChar = this.stream.peekNextCharacter();
-      if (nextChar === '.') {
-        break;
+    const nextNextChar = this.stream.peekXCharactersForward(2);
+
+    if (nextNextChar === '.') {
+      // Ellipsis
+      return this.createToken(TokenType.Number, buffer);
+    } else {
+      // float
+      while (nextChar === '.' || this.numCharRegex.test(nextChar)) {
+        buffer += this.stream.getNextCharacter();
+        nextChar = this.stream.peekNextCharacter();
+
+        if (nextChar === '.') {
+          break;
+        }
       }
+      return this.createToken(TokenType.Number, buffer);
     }
-    return this.createToken(TokenType.Number, buffer);
   }
 
   protected parseEllipsis(): Token {

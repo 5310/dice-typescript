@@ -21,7 +21,12 @@ export class StringCharacterStream implements CharacterStream {
   }
 
   peekNextCharacter(): string {
-    if (this.index >= this.input.length) { return null; }
+    if (this.index + 1 >= this.input.length) { return null; }
     return this.input[this.index + 1];
+  }
+
+  peekXCharactersForward(i: number): string {
+    if (this.index + i >= this.input.length) { return null; }
+    return this.input[this.index + i];
   }
 }

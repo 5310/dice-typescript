@@ -113,6 +113,18 @@ describe('DiceLexer', () => {
       expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Number, 9, '3'));
       expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.BraceClose, 10, '}'));
     });
+    it('interprets float / group repeater correctly', () => {
+      const lexer = new Lexer.DiceLexer('{4d6kh3...7}');
+      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.BraceOpen, 0, '{'));
+      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Number, 1, '4'));
+      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Identifier, 2, 'd'));
+      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Number, 3, '6'));
+      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Identifier, 4, 'kh'));
+      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Number, 6, '3'));
+      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Ellipsis, 7, '...'));
+      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Number, 10, '7'));
+      expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.BraceClose, 11, '}'));
+    });
     it('interprets a floating point number correctly', () => {
       const lexer = new Lexer.DiceLexer('2.23');
       expect(lexer.getNextToken()).toEqual(new Lexer.Token(Lexer.TokenType.Number, 0, '2.23'));
