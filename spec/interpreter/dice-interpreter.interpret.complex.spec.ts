@@ -29,7 +29,7 @@ describe('DiceInterpreter', () => {
       expect(res.successes).toBe(1, 'Successes counted incorrectly');
       expect(res.failures).toBe(0, 'Failures counted incorrectly');
       expect(res.total).toBe(15, 'Total counted incorrectly');
-      expect(res.renderedExpression).toBe('[20, 15]kl > 14', 'Expression rendered incorrectly.');
+      expect(res.renderedExpression).toBe('[20, 15]kl > 14 | Difficulty: > 14', 'Expression rendered incorrectly.');
     });
     it('interprets a complex dice expression {2d20kl..5}>=14).', () => {
       const exp = Ast.Factory.create(Ast.NodeType.GreaterOrEqual);
@@ -64,7 +64,7 @@ describe('DiceInterpreter', () => {
       expect(res.failures).toBe(3, 'Failures counted incorrectly');
       expect(res.total).toBe(29, 'Total counted incorrectly');
       expect(res.renderedExpression).toBe(
-        '{[20, 15]kl = 15; [14, 10]kl = 10; [18, 14]kl = 14; [2, 13]kl = 2; [18, 10]kl = 10} >= 14',
+        '{[20, 15]kl = 15; [14, 10]kl = 10; [18, 14]kl = 14; [2, 13]kl = 2; [18, 10]kl = 10} >= 14 | Difficulty: >= 14',
         'Expression rendered incorrectly.'
       );
     });
