@@ -26,6 +26,7 @@ example:
 
 ```typescript
 import { Dice } from "@scio/dice-typescript";
+// Or `import Dice from 'https://esm.sh/@scio/dice-typescript';` for Deno
 
 const dice = new Dice();
 const result = dice.roll("1d20").total;
