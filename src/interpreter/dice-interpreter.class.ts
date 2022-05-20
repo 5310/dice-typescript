@@ -544,10 +544,9 @@ export class DiceInterpreter implements Interpreter<DiceResult> {
     }
     diceOrGroup.forEachChild(die => {
       if (!die.getAttribute('drop')) {
-        const val = this.evaluate(die, errors);
         const res = compare(this.evaluate(die, errors), rhv);
         die.setAttribute('success', res);
-        if (res) { total += val; }
+        if (res) { total++; }
       }
     });
 
