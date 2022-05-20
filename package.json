@@ -7,8 +7,7 @@
   "scripts": {
     "build": "npm run clean && npm run lint && npm run tsc",
     "clean": "node ./node_modules/rimraf/bin ./dist && node ./node_modules/rimraf/bin ./coverage",
-    "coverage": "istanbul coverage",
-    "codacy": "cat ./coverage/lcov/lcov.info | codacy-coverage --verbose",
+    "coverage": "istanbul cover .",
     "lint": "tslint -p ./tslint.json",
     "lint:fix": "tslint -p ./tslint.json --fix",
     "tsc": "tsc --project ./tsconfig.build.json",
@@ -38,13 +37,12 @@
   "homepage": "https://github.com/5310/dice-typescript#readme",
   "devDependencies": {
     "@types/jasmine": "3.5.0",
-    "codacy-coverage": "3.4.0",
-    "istanbul": "^0.4.5",
+    "istanbul": "5.5.3",
     "jasmine-core": "3.5.0",
-    "karma": "4.4.1",
+    "karma": "^6.3.20",
     "karma-chrome-launcher": "3.1.0",
     "karma-jasmine": "3.1.0",
-    "karma-typescript": "4.1.1",
+    "karma-typescript": "^5.5.3",
     "rimraf": "3.0.0",
     "tslint": "5.20.1",
     "typescript": "3.7.4"
