@@ -1,8 +1,7 @@
-# dice-typescript [![NPM version](https://badge.fury.io/js/dice-typescript.svg)](http://badge.fury.io/js/dice-typescript)
+# dice-typescript [![NPM version](https://badge.fury.io/js/@scio%2Fdice-typescript.svg)](http://badge.fury.io/js/@scio%2Fdice-typescript)
 
-[![Build Status](https://travis-ci.org/trwolfe13/dice-typescript.svg?branch=master)](https://travis-ci.org/trwolfe13/dice-typescript)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/31dad84d91994a0b9dfafb2505db9bc1)](https://www.codacy.com/app/trwolfe13/dice-typescript?utm_source=github.com&utm_medium=referral&utm_content=trwolfe13/dice-typescript&utm_campaign=Badge_Grade)
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/31dad84d91994a0b9dfafb2505db9bc1)](https://www.codacy.com/app/trwolfe13/dice-typescript?utm_source=github.com&utm_medium=referral&utm_content=trwolfe13/dice-typescript&utm_campaign=Badge_Coverage)
+> This fork of [dice-typescript](https://www.npmjs.com/package/dice-typescript)
+> changes how [conditional rolls](#conditional-operators) are handled.
 
 A TypeScript library for parsing dice rolling expressions, most commonly used in
 tabletop RPGs.
@@ -26,7 +25,7 @@ At its simplest, the dice roller is very simple to use. Take the following
 example:
 
 ```typescript
-import { Dice } from "dice-typescript";
+import { Dice } from "@scio/dice-typescript";
 
 const dice = new Dice();
 const result = dice.roll("1d20").total;
@@ -180,6 +179,16 @@ different. In the Roll20 engine, `>10` actually means `>=10`, but in this
 library, you would need to actually use the `>=` operator. I feel needing to use
 the correct mathematical operators makes for a more intuitive library.
 
+> In this fork, the number of successes in conditional dice-pools are returned
+> as the total, so that they can be used to form more complex expressions.
+
+```dice
+{4d10 >= 5} + 1
+```
+
+The above will roll a World of Darkness like dice-pool of four dice, and a bonus
+free success.
+
 ##### Group Repeaters
 
 Sometimes it is necessary to roll complex groups of dice that aren't supported
@@ -191,8 +200,8 @@ this:
 {2d20kl...10}>=14
 ```
 
-The above will roll 10 disadvantaged saving throws, reporting successes for
-those that break DC14.
+The above will roll 10 disadvantaged saving throws, reporting the number of
+successes for those that break DC14.
 
 ##### Fractional Dice Rolls
 
