@@ -1,18 +1,17 @@
 {
   "name": "@scio/dice-typescript",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "A TypeScript library for parsing dice rolling expressions, most commonly used in tabletop RPGs.",
   "main": "./dist/index.js",
   "scripts": {
     "build": "npm run clean && npm run lint && npm run tsc",
     "clean": "node ./node_modules/rimraf/bin ./dist && node ./node_modules/rimraf/bin ./coverage",
-    "coverage": "istanbul cover .",
     "lint": "tslint -p ./tslint.json",
     "lint:fix": "tslint -p ./tslint.json --fix",
     "tsc": "tsc --project ./tsconfig.build.json",
     "test": "npm run lint && karma start --single-run",
     "test:watch": "karma start",
-    "publish": "npm publish --access public"
+    "publish": "npm publish --access public || echo Version unchanged"
   },
   "repository": {
     "type": "git",
@@ -37,7 +36,6 @@
   "homepage": "https://github.com/5310/dice-typescript#readme",
   "devDependencies": {
     "@types/jasmine": "3.5.0",
-    "istanbul": "5.5.3",
     "jasmine-core": "3.5.0",
     "karma": "^6.3.20",
     "karma-chrome-launcher": "3.1.0",
