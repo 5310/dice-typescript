@@ -65,5 +65,26 @@ describe('DiceInterpreter', () => {
       expect(exp.getAttribute('success')).toBe(1);
       expect(res).toBe(1);
     });
+
+
+    it('evaluates successes as total for further modification (5d20>10).', () => {
+      const exp = Ast.Factory.create(Ast.NodeType.Greater);
+
+      const dice = Ast.Factory.create(Ast.NodeType.Dice);
+      dice.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 5));
+      dice.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 20));
+
+      exp.addChild(dice);
+      exp.addChild(Ast.Factory.create(Ast.NodeType.Number).setAttribute('value', 10));
+
+      const mockList = new MockListRandomProvider();
+      mockList.numbers.push(8, 12, 6, 20, 14);
+
+      const interpreter = new Interpreter.DiceInterpreter(null, mockList);
+      const errors: Interpreter.InterpreterError[] = [];
+      const res = interpreter.evaluate(exp, errors);
+
+      expect(res).toBe(3);
+    });
   });
 });

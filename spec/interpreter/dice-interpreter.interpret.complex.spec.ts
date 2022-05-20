@@ -28,7 +28,7 @@ describe('DiceInterpreter', () => {
       expect(res.errors.length).toBe(0, 'Unexpected errors found.');
       expect(res.successes).toBe(1, 'Successes counted incorrectly');
       expect(res.failures).toBe(0, 'Failures counted incorrectly');
-      expect(res.total).toBe(15, 'Total counted incorrectly');
+      expect(res.total).toBe(res.successes, 'Total counted incorrectly');
       expect(res.renderedExpression).toBe('[20, 15]kl > 14 | Difficulty: > 14', 'Expression rendered incorrectly.');
     });
     it('interprets a complex dice expression {2d20kl..5}>=14).', () => {
@@ -62,7 +62,7 @@ describe('DiceInterpreter', () => {
       expect(res.errors.length).toBe(0, 'Unexpected errors found.');
       expect(res.successes).toBe(2, 'Successes counted incorrectly');
       expect(res.failures).toBe(3, 'Failures counted incorrectly');
-      expect(res.total).toBe(29, 'Total counted incorrectly');
+      expect(res.total).toBe(res.successes, 'Total counted incorrectly');
       expect(res.renderedExpression).toBe(
         '{[20, 15]kl = 15; [14, 10]kl = 10; [18, 14]kl = 14; [2, 13]kl = 2; [18, 10]kl = 10} >= 14 | Difficulty: >= 14',
         'Expression rendered incorrectly.'
