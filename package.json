@@ -1,6 +1,5 @@
 {
   "name": "@scio/dice-typescript",
-  "private": false,
   "version": "1.6.1",
   "description": "A TypeScript library for parsing dice rolling expressions, most commonly used in tabletop RPGs.",
   "main": "./dist/index.js",
@@ -12,7 +11,8 @@
     "lint:fix": "tslint -p ./tslint.json --fix",
     "tsc": "tsc --project ./tsconfig.build.json",
     "test": "npm run lint && karma start --single-run",
-    "test:watch": "karma start"
+    "test:watch": "karma start",
+    "publish": "npm publish --access public"
   },
   "repository": {
     "type": "git",
